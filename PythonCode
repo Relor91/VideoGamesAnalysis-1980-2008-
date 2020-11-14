@@ -1,0 +1,998 @@
+#%%
+import matplotlib as mpl
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\VideoGameSales.csv',parse_dates=True)
+headers = list(df.columns.values)
+years = list(range(2009,2021))
+df = (df[~df.Year.isin(years)].dropna(axis=0))
+df.sort_values(by='Year',ascending=False).head()
+fig = plt.figure()
+ax1 = fig.add_subplot(221)
+ax2 = fig.add_subplot(222)
+ax3 = fig.add_subplot(223)
+ax4 = fig.add_subplot(224)
+years = list(range(1980,2009))
+
+#################################################################Dropping rows with NAs which amount to less or equal to 5% of the data
+df.reset_index(drop=True,inplace=True)
+threshold = 5
+threshold = threshold/100
+for header in headers:
+    if  list(df[header].isna()).count(True) > 0 :
+        print(header,list(df[header].isna()).count(True))
+        if (list(df[header].isna()).count(True)/df[header].shape[0]) < threshold :
+            df[header].dropna(inplace=True,axis=0)
+        else:
+            pass
+    else:
+        pass
+df.reset_index(drop=True,inplace=True)
+
+
+#################################################################Quick overview of top Global sales by Genre
+genre_df = pd.DataFrame(df[['Genre','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']]
+                        .groupby('Genre')
+                        .sum())\
+    .sort_values(by='Global_Sales',axis=0,ascending=False)\
+    .reset_index()
+genre_df
+genre2_df = genre_df
+#################################################################Genre Histogram
+genre2_df = pd.DataFrame(df[['Genre','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']])
+genre2_df['Counts'] = genre2_df.groupby(['Genre'])['Genre'].transform(len) #len counts NANs, you can use 'count' if you want to ignore NANs
+dict2 = genre2_df[['Genre','Counts']].set_index('Genre').to_dict()
+genre_counts_df = pd.DataFrame(dict2).sort_values(by='Counts',ascending=False)
+genre_counts_df.reset_index(inplace=True)
+genre_counts_df.rename(columns={'index':'Genre'},inplace=True)
+
+plt.figure(figsize=(20,10))
+bins_edges = np.arange(len(list(df['Genre'].unique())))-0.5
+
+ax1.bar(genre_counts_df['Genre'],genre_counts_df['Counts']) #use this setting when using categorical data for histograms
+
+
+
+ax1.set_title('Genre Histogram',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+
+ax1.set(xlabel='Genres', ylabel='')
+
+#################################################################Quick overview of top Global sales by Genre
+genre_df = pd.DataFrame(df[['Genre','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']]
+                        .groupby('Genre')
+                        .sum())\
+    .sort_values(by='Global_Sales',axis=0,ascending=False)\
+    .reset_index()
+genre_df
+
+#################################################################Global sales By Year Bar Chart - Data from 2010 onward is not accurate. Years limited till 2009
+yearsales_df = df[['Year','Global_Sales']].groupby('Year').sum().sort_values(by='Year',axis=0,ascending=True)
+yearsales_df = yearsales_df.loc[years,:]
+yearsales_df.head()
+values = yearsales_df['Global_Sales'].to_list()
+
+yearsales_df = df[['Year','Global_Sales','Genre']].groupby(['Year','Genre']).sum().sort_values(by='Year',axis=0,ascending=True)
+
+yearsales_df = yearsales_df.loc[years,:]
+yearsales_df.reset_index(inplace=True)
+yearsales_df = yearsales_df.pivot(index='Year',columns='Genre').fillna(0)
+yearsales_df.index = yearsales_df.index.astype(int) #turn axis(index) into integer as years were shown with one decimal space
+
+yearsales_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv',skiprows=1,parse_dates=True)
+temp_df = temp_df.set_index('Genre')
+
+temp_df.plot(kind='bar',stacked=True,figsize=(20,10),ax=ax2,colormap=ListedColormap(sns.color_palette("Paired", len(list(yearsales_df['Global_Sales'].columns)))))
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax2.annotate(label,
+                xy=(index-0.30,value),
+                 color='k',
+                 size=10
+                 )
+#plt.legend(loc='upper center',prop={'size': 20})
+ax2.set_title('Genre Sales by Year',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax2.set(xlabel='Years',ylabel='Sales')
+###
+################################################################# H-Bar Chart Global Sales by Genre
+pal = sns.color_palette("Paired", len(list(df['Genre'].unique())))
+pal = pal.as_hex()
+
+genres = list(yearsales_df['Global_Sales'].columns)
+totalsales_df = genre_df[['Genre','Global_Sales']]
+totalsales_df.set_index('Genre',inplace=True)
+pallette_dict = dict(zip(genres, pal))
+
+plt.figure(figsize=(20,10))
+totalsales_df.sort_values(by='Global_Sales',axis=0,ascending=True,inplace=True)
+
+
+totalsales_df.plot(kind='barh', ax=ax3, color=[tuple(totalsales_df.reset_index()['Genre'].map(pallette_dict))])
+values = totalsales_df['Global_Sales'].to_list()
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax3.annotate(label,
+                xy=(value, index-0.12),
+                 color='k'
+                 )
+ax3.set_title('Global Sales by Genre(1980-2008)',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax3.set(xlabel='Sales', ylabel='Genres')
+ax3.legend('')
+#################################################################Top 4-Genres Global Sales by Year Line Chart
+
+top4_genre_df = pd.DataFrame(df[['Year', 'Genre', 'Global_Sales']].groupby(['Year', 'Genre']).sum()).sort_values(by='Year', ascending=True).reset_index()
+top4_genre_df.set_index('Year', inplace=True)
+top4_genre_df = top4_genre_df.loc[years, :]
+top4_genre_df = top4_genre_df[top4_genre_df['Genre'].isin(genre_df.loc[0:3, 'Genre'].tolist())].reset_index() #filtering for the top 5 genres
+top4_genre_df = top4_genre_df.pivot(index='Year', columns='Genre')
+new_pallette_dict = {your_key: pallette_dict[your_key] for your_key in top4_genre_df['Global_Sales'].columns}
+
+top4_genre_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF2.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF2.csv',skiprows=[0,2],parse_dates=True)
+temp_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF22.csv')
+temp_df = temp_df.set_index('Genre')
+
+temp_df.plot(kind='line', figsize=(20, 10), color=list(tuple(genre_df.loc[0:3,'Genre'].sort_values().map(new_pallette_dict))), linewidth=5, ax=ax4)
+
+xy_xarrow = [2005.7,1998.5,1984.5]
+xy_yarrow = [137,47,39]
+xytext_xarrow = [2005,1994.8,1983.8]
+xytext_yarrow = [80,22,5]
+
+labels = ['Football World Cup','Playstation','Duck Hunt for NES']
+xy_xlabel = [2004.5,1995.5,1983.3]
+xy_ylabel = [90,29.5,10]
+rotation_label = [83,32,76]
+
+for x, y, xtext, ytext in zip(xy_xarrow, xy_yarrow, xytext_xarrow, xytext_yarrow):
+    ax4.annotate('',  # s: str. will leave it blank for no text
+                 xy=(x, y),  # place head of the arrow at point (year 2012 , pop 70)
+                 xytext=(xtext, ytext),  # place base of the arrow at point (year 2008 , pop 20)
+                 xycoords='data',  # will use the coordinate system of the object being annotated
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='red', lw=4)
+                 )
+
+for label, x, y, alpha in zip(labels, xy_xlabel, xy_ylabel, rotation_label):
+    ax4.annotate(label,  # text to display
+                 xy=(x, y),  # start the text at at point (year 2008 , pop 30)
+                 rotation=alpha,  # based on trial and error to match the arrow
+                 va='bottom',  # want the text to be vertically 'bottom' aligned
+                 ha='left',  # want the text to be horizontally 'left' algned.
+                 color='red',
+                 size=7
+                 )
+ax4.set_title('Top 4-Genres Global Sales by Year',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax4.set(xlabel='Years',ylabel='Sales')
+ax4.set_xticks(years)
+ax4.set_xticklabels(years,rotation='vertical')
+fig.show()
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+#GENRES BY REGION
+fig2 = plt.figure(figsize=(200,200),dpi=100)
+fig2.suptitle('Top Genres Sold by Region',fontsize=35)
+fig2.tight_layout()
+
+mpl.rcParams['font.size'] = 15.0
+
+
+ax1 = fig2.add_subplot(5, 5, 1)
+ax2 = fig2.add_subplot(5, 5, 6)
+ax3 = fig2.add_subplot(5, 5, 11)
+ax4 = fig2.add_subplot(5, 5, 16)
+ax5 = fig2.add_subplot(5, 5, 21)
+ax6 = fig2.add_subplot(5, 5, 2)
+ax7 = fig2.add_subplot(5, 5, 7)
+ax8 = fig2.add_subplot(5, 5, 12)
+ax9 = fig2.add_subplot(5, 5, 17)
+ax10 = fig2.add_subplot(5, 5, 22)
+ax11 = fig2.add_subplot(5, 5, 3)
+ax12 = fig2.add_subplot(5, 5, 8)
+ax13 = fig2.add_subplot(5, 5, 13)
+ax14 = fig2.add_subplot(5, 5, 18)
+ax15 = fig2.add_subplot(5, 5, 23)
+ax16 = fig2.add_subplot(5, 5, 4)
+ax17 = fig2.add_subplot(5, 5, 9)
+ax18 = fig2.add_subplot(5, 5, 14)
+ax19 = fig2.add_subplot(5, 5, 19)
+ax20 = fig2.add_subplot(5, 5, 24)
+ax21 = fig2.add_subplot(5, 5, 5)
+ax22 = fig2.add_subplot(5, 5, 10)
+ax23 = fig2.add_subplot(5, 5, 15)
+ax24 = fig2.add_subplot(5, 5, 20)
+ax25 = fig2.add_subplot(5, 5, 25)
+year_group1 = list(range(1980, 1990))
+year_group2 = list(range(1990, 2000))
+year_group3 = list(range(2000, 2006))
+year_group4 = list(range(2005, 2009))
+year_group5 = [2008]
+years_list = [year_group1, year_group2, year_group3, year_group4, year_group5]
+c = 0
+a = 0
+b = 6
+
+years_df = df[['Genre', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+years_df = years_df.set_index('Year').sort_index(ascending=True)
+
+for year_group in years_list:
+    years_df = years_df.loc[year_group, :].reset_index()
+
+    years_list_text = [('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')')]
+
+
+    ax_list = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12, ax13, ax14, ax15, ax16, ax17, ax18, ax19,
+               ax20, ax21, ax22, ax23, ax24, ax25]
+    ax_list = ax_list[a:b]
+    a = a + 5
+    b = b + 5
+    c = c + 1
+
+    title_list = ['North America','Europe','Japan','Rest of World','All Regions']
+    regions_list = df[['NA_Sales','EU_Sales','JP_Sales','Other_Sales','Global_Sales']].columns[0:5]
+
+    years_df2 = years_df
+
+    years_df = df[['Genre', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+    years_df = years_df.set_index('Year').sort_index(ascending=True)
+
+
+    for ax,region,title,txt in zip(ax_list,regions_list,title_list, years_list_text):
+        regions_genre_df = years_df2[['Genre', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']] \
+            .groupby('Genre').sum() \
+            .sort_values(by=region, ascending=False).reset_index()
+        regions_genre_df = regions_genre_df.set_index('Genre')
+        piecolours_list = list(tuple(regions_genre_df.reset_index()['Genre'].map(pallette_dict, na_action=None)))
+        cleaned_piecolours_list = [x for x in piecolours_list if str(x) != 'nan']
+        explode_list = ([0] * (len(regions_genre_df.index)-2))
+        explode_list[0:3] = [0.1, 0.1, 0.1]
+        genres_list = list(regions_genre_df.index)[0:10]
+        regions_genre_df.loc[genres_list,region].plot(kind='pie',
+                                                      radius=1.8,
+                                                      figsize=(50,50),
+                                                      autopct=lambda pct: ('%.2f' % pct) if pct > 4 else '',
+                                                      pctdistance=1.2,
+                                                      labeldistance=0.5,
+                                                      startangle=90,
+                                                      rotatelabels=True,
+                                                      shadow=True,
+                                                      labels=regions_genre_df.reset_index()['Genre'],
+                                                      colors=cleaned_piecolours_list,
+                                                      ax= ax
+                                                      )
+        ax.set_title(title + txt, loc='center',y=1.6, fontdict={'fontsize': 30,
+                                                          'fontweight': 20,
+                                                          'verticalalignment': 'top',
+                                                          'horizontalalignment': 'center'}
+                     )
+        ax.set(xlabel='',ylabel='')
+        #ax.legend(labels=['%s, %1.1f %%' % (l, s) for l, s in zip(regions_genre_df.reset_index()['Genre'],regions_genre_df[region])])
+#labels=['%s, %1.1f %%' % (l, s) for l, s in zip(regions_genre_df.reset_index()['Genre'],regions_genre_df[region])]
+#regions_genre_df.reset_index()['Genre']
+#        def my_autopct(pct):
+#            return ('%.2f' % pct) if pct > 5 else ''
+fig2.show()
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+#################################################################Platform Histogram
+fig3 = plt.figure()
+fig3.tight_layout()
+
+ax1 = fig3.add_subplot(221)
+ax2 = fig3.add_subplot(222)
+ax3 = fig3.add_subplot(223)
+ax4 = fig3.add_subplot(224)
+plt.figure(figsize=(45,22.5))
+
+
+Platforms = list(df['Platform'].unique())
+bins_edges = len(list(df['Platform'].unique()))
+ax1.hist(df['Platform'],bins=bins_edges-1,align='left',histtype='stepfilled')
+ax1.set_title('Platform Histogram',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax1.set_xticklabels([str(x) for x in Platforms])
+ax1.set(xlabel='Platforms',ylabel='')
+#################################################################Platform sales By Year Bar Chart - Data from 2010 onward is not accurate. Years limited till 2015
+import matplotlib
+rgb_colors = {}
+for name, hex in matplotlib.colors.cnames.items():
+    rgb_colors[name] = matplotlib.colors.to_rgb(hex)
+print(len(rgb_colors))
+
+yearsales_df = df[['Year','Platform','Global_Sales']].groupby('Year').sum().sort_values(by='Year',axis=0,ascending=True)
+yearsales_df = yearsales_df.loc[years,:]
+yearsales_df.head()
+values = yearsales_df['Global_Sales'].to_list()
+yearsales_df = df[['Year','Platform','Global_Sales']].groupby(['Year','Platform']).sum().sort_values(by='Year',axis=0,ascending=True)
+yearsales_df = yearsales_df.loc[years,:]
+yearsales_df.reset_index(inplace=True)
+yearsales_df = yearsales_df.pivot(index='Year',columns='Platform').fillna(0)
+yearsales_df.index = yearsales_df.index.astype(int)
+
+import random
+
+platforms_list = []
+for item in list(yearsales_df.columns):
+   platforms_list.append(item[1])
+
+
+colors_list = []
+for item in platforms_list:
+    color = "#%06x" % random.randint(0, 0xFFFFFF)
+    colors_list.append(color)
+
+
+#HEX_TO_RGBA
+rgb_colors_list = []
+for item in colors_list:
+    h = item.lstrip('#')
+    rgb_colors_list.append(tuple(int(h[i:i+2], 16)/255 for i in (0, 2, 4)))
+rgb_colors_list
+
+yearsales_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv',skiprows=1,parse_dates=True)
+temp_df = temp_df.set_index('Platform')
+
+
+
+
+temp_df.plot(kind='bar',stacked=True,figsize=(45,22.5),colormap=ListedColormap(sns.color_palette(colors_list)),ax=ax2)
+
+for index, value in enumerate(values):
+    label = format(int(value), ',')
+    ax2.annotate(label,
+                xy=(index-0.25,value),
+                 color='k',
+                 size=10
+                 )
+ax2.legend(loc='best',prop={'size': 15})
+ax2.set_title('Platform Global Sales by Year',loc='center',fontdict={'fontsize': 30,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax2.set(xlabel='Years',ylabel='Sales')
+ax2.set_xticks(np.arange(len(years)))
+ax2.set_xticklabels([str(x) for x in years],rotation=90)
+
+#################################################################H-Bar Chart Global Sales by Platform
+colors_dict = dict(zip(platforms_list,colors_list))
+
+platforms_df = df[['Platform','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']]\
+    .groupby('Platform').sum()\
+    .sort_values(by='Global_Sales',ascending=False).reset_index()
+platforms = list(platforms_df['Platform'].unique())
+platforms_grouped = platforms_df.set_index('Platform').reset_index()
+
+platforms_grouped = platforms_grouped[['Platform','Global_Sales']].set_index('Platform').sort_values(by='Global_Sales',ascending=True)
+plt.figure(figsize=(45,22.5))
+difference = set(list(platforms_grouped.index)) - set(platforms_list)
+platforms_grouped.drop(difference,axis=0,inplace=True)
+platforms_grouped.plot(kind='barh',
+                       color=[tuple(platforms_grouped.reset_index()['Platform'].map(colors_dict))],ax=ax3)
+
+values = platforms_grouped['Global_Sales'].tolist()
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax3.annotate(label,
+                xy=(value, index-0.28),
+                 color='k'
+                 )
+ax3.set_title('Global Sales by Platform(1980-2008)',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax3.set(xlabel='Sales',ylabel='Platforms')
+
+
+
+
+
+#############################################Top 10 Platforms Global Sales by Year Line Chart
+
+platform_df = pd.DataFrame(df[['Platform','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']]
+                        .groupby('Platform')
+                        .sum())\
+    .sort_values(by='Global_Sales',axis=0,ascending=False)\
+    .reset_index()
+
+top10_Platform_df = pd.DataFrame(df[['Year', 'Platform', 'Global_Sales']]
+                                 .groupby(['Year','Platform']).sum())\
+    .sort_values(by='Year',ascending=True).reset_index()
+
+top10_Platform_df.set_index('Year', inplace=True)
+
+top10_Platform_df = top10_Platform_df[top10_Platform_df['Platform']
+    .isin(platform_df.loc[0:10,'Platform'].tolist())].reset_index()
+
+top10_Platform_df = top10_Platform_df.pivot(index='Year', columns='Platform')
+
+top10platforms_colors_dict = { your_key: colors_dict[your_key] for your_key in platform_df.loc[0:10,'Platform'] }
+platform_df.loc[0:10, 'Platform'].sort_values()
+
+
+
+top10_Platform_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF2.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF2.csv',skiprows=[0,2],parse_dates=True)
+temp_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF22.csv')
+temp_df = temp_df.set_index('Platform')
+
+
+
+
+temp_df.plot(kind='line',figsize=(45,22.5),
+                       color=list(tuple(platform_df.loc[0:10, 'Platform'].sort_values().map(top10platforms_colors_dict))), linewidth=5,ax=ax4)
+
+ax4.set_title('Top 10-Platforms Global Sales by Year',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax4.set(xlabel='Years',ylabel='Platforms')
+ax4.set_xticks(years)
+ax4.set_xticklabels(years,rotation='vertical')
+fig3.show()
+
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+fig4 = plt.figure(figsize=(50,25))
+fig4.suptitle('Top6-Platforms by Region',fontsize=35)
+
+ax1 = fig4.add_subplot(5, 5, 1)
+ax2 = fig4.add_subplot(5, 5, 6)
+ax3 = fig4.add_subplot(5, 5, 11)
+ax4 = fig4.add_subplot(5, 5, 16)
+ax5 = fig4.add_subplot(5, 5, 21)
+ax6 = fig4.add_subplot(5, 5, 2)
+ax7 = fig4.add_subplot(5, 5, 7)
+ax8 = fig4.add_subplot(5, 5, 12)
+ax9 = fig4.add_subplot(5, 5, 17)
+ax10 = fig4.add_subplot(5, 5, 22)
+ax11 = fig4.add_subplot(5, 5, 3)
+ax12 = fig4.add_subplot(5, 5, 8)
+ax13 = fig4.add_subplot(5, 5, 13)
+ax14 = fig4.add_subplot(5, 5, 18)
+ax15 = fig4.add_subplot(5, 5, 23)
+ax16 = fig4.add_subplot(5, 5, 4)
+ax17 = fig4.add_subplot(5, 5, 9)
+ax18 = fig4.add_subplot(5, 5, 14)
+ax19 = fig4.add_subplot(5, 5, 19)
+ax20 = fig4.add_subplot(5, 5, 24)
+ax21 = fig4.add_subplot(5, 5, 5)
+ax22 = fig4.add_subplot(5, 5, 10)
+ax23 = fig4.add_subplot(5, 5, 15)
+ax24 = fig4.add_subplot(5, 5, 20)
+ax25 = fig4.add_subplot(5, 5, 25)
+year_group1 = list(range(1980, 1990))
+year_group2 = list(range(1990, 2000))
+year_group3 = list(range(2000, 2006))
+year_group4 = list(range(2005, 2009))
+year_group5 = [2008]
+years_list = [year_group1, year_group2, year_group3, year_group4, year_group5]
+c = 0
+a = 0
+b = 6
+
+years_df = df[['Platform', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+years_df = years_df.set_index('Year').sort_index(ascending=True)
+
+for year_group in years_list:
+    years_df = years_df.loc[year_group, :].reset_index()
+
+    years_list_text = [('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')')]
+
+
+    ax_list = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12, ax13, ax14, ax15, ax16, ax17, ax18, ax19,
+               ax20, ax21, ax22, ax23, ax24, ax25]
+    ax_list = ax_list[a:b]
+    a = a + 5
+    b = b + 5
+    c = c + 1
+    title_list = ['North America','Europe','Japan','Rest of World','All Regions']
+    regions_list = df[['NA_Sales','EU_Sales','JP_Sales','Other_Sales','Global_Sales']].columns[0:5]
+
+    years_df2 = years_df
+
+    years_df = df[['Platform', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+    years_df = years_df.set_index('Year').sort_index(ascending=True)
+
+    for ax,region,title, txt in zip(ax_list,regions_list,title_list, years_list_text):
+        #years_df2
+        regions_plat_df = years_df2[['Platform', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']] \
+            .groupby('Platform').sum() \
+            .sort_values(by=region, ascending=False).reset_index()
+        regions_plat_df = regions_plat_df.set_index('Platform')
+        piecolours_list = list(tuple(regions_plat_df.reset_index()['Platform'].map(colors_dict, na_action=None)))
+        cleaned_piecolours_list = [x for x in piecolours_list if str(x) != 'nan']
+        explode_list = ([0] * (len(regions_plat_df.index)))[0:6]
+        explode_list[0:3] = [0.1, 0.1, 0.1]
+        top10platforms_list = list(regions_plat_df.index)[0:6]
+        regions_plat_df.loc[top10platforms_list,region].plot(kind='pie',
+                                                             figsize=(50,50),
+                                                             radius=1.8,
+                                                             autopct=lambda pct: ('%.2f' % pct) if pct > 5 else '',
+                                                             pctdistance=1.2,
+                                                             labeldistance=0.5,
+                                                             startangle=90,
+                                                             rotatelabels=True,
+                                                             shadow=True,
+                                                             labels=regions_plat_df.reset_index()['Platform'],
+                                                             explode=explode_list,
+                                                             colors=cleaned_piecolours_list,
+                                                             ax= ax
+                                                             )
+        ax.set_title(title + txt, loc='center',y=1.6, fontdict={'fontsize': 30,
+                                                          'fontweight': 10,
+                                                          'verticalalignment': 'top',
+                                                          'horizontalalignment': 'center'}
+                     )
+        ax.set(xlabel='',ylabel='')
+
+fig4.show()
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+###########################################################SALES BY REGION SAMEAS FIRST FIGURE BUT NOT DIVIDED BY GENRE BUT BY REGION###################################################
+fig5 = plt.figure()
+ax1 = fig5.add_subplot(221)
+ax2 = fig5.add_subplot(222)
+ax3 = fig5.add_subplot(223)
+ax4 = fig5.add_subplot(224)
+import matplotlib.gridspec as gridspec
+gs1 = gridspec.GridSpec(4, 4)
+gs1.update(wspace=0.025, hspace=0.05)
+
+#################################################################Genre Histogram
+plt.figure(figsize=(30,15))
+
+bins_edges = len(list(df['Genre'].unique()))
+y_sort = df.groupby('Genre').count().reset_index()
+y_sort = y_sort
+ax1.hist(df['Genre'],bins=bins_edges-1,align='left',histtype='stepfilled') #use this setting when using categorical data for histograms
+
+ax1.set_title('Genre Histogram',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+
+ax1.set(xlabel='Genres', ylabel='')
+
+#################################################################Global sales By Year Bar Chart - Data from 2010 onward is not accurate. Years limited till 2009
+
+regionsales_df = df[['Year','NA_Sales','EU_Sales','JP_Sales','Other_Sales']].groupby(['Year']).sum().sort_values(by='Year',axis=0,ascending=True)
+regionsales_df.index = regionsales_df.index.astype(int)
+regionsales_df.plot(kind='bar',stacked=True,
+                    ax=ax2,
+                    figsize=(30,15),
+                    colormap=ListedColormap(sns.color_palette("Paired", len(list(regionsales_df.columns)))))
+
+regionsales_df['Total'] = regionsales_df.sum(axis=1)
+values = regionsales_df['Total'].to_list()
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax2.annotate(label,
+                 xy=(index-0.30,value),
+                 color='k',
+                 size=10
+                 )
+
+ax2.set_title('Region Sales By Year',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax2.set(xlabel='Years',ylabel='Regions')
+
+
+################################################################# H-Bar Chart Global Sales by Region
+
+regionsales_df.drop('Total',axis=1,inplace=True)
+regionsales_df = regionsales_df.transpose()
+regionsales_df['Total'] = regionsales_df.sum(axis=1)
+regionsales_df.drop(years,axis=1,inplace=True)
+pal = sns.color_palette("Paired", len(list(regionsales_df.index)))
+pal = pal.as_hex()
+
+regions = ['NA_Sales','EU_Sales','JP_Sales','Other_Sales']
+totalsales_df = genre_df[['Genre','Global_Sales']]
+totalsales_df.set_index('Genre',inplace=True)
+palette_dict = dict(zip(regions,pal))
+
+
+regionsales_df.sort_values(by='Total',axis=0,ascending=True,inplace=True)
+regionsales_df.plot(kind='barh',
+                    ax=ax3,
+                    color=[tuple(regionsales_df.index.map(palette_dict))])
+
+
+values = regionsales_df['Total'].to_list()
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax3.annotate(label,
+                xy=(value, index-0.12),
+                 color='k'
+                 )
+ax3.set_title('Global Sales by Region(1980-2008)',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax3.set(xlabel='Sales', ylabel='Regions')
+ax3.legend('')
+
+#################################################################Regions Sales by Year Line Chart
+
+regionsales_df = df[['Year','NA_Sales','EU_Sales','JP_Sales','Other_Sales']].groupby(['Year']).sum().sort_values(by='Year',axis=0,ascending=True)
+regionsales_df.index = regionsales_df.index.astype(int).to_list()
+
+
+regionsales_df.plot(kind='line',figsize=(30,15),
+                    color=list(tuple(regionsales_df.columns.map(palette_dict))),
+                    linewidth=5,
+                    ax=ax4
+                    )
+plt.xticks(list(range(1980,2009)))
+
+ax4.set_title('Region Sales by Year',loc='center',fontdict={'fontsize': 30,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax4.legend(loc='upper left',prop={'size': 20})
+ax4.set(xlabel='Years',ylabel='Sales')
+ax4.set_xticks(years)
+ax4.set_xticklabels(years,rotation='vertical')
+
+fig5.show()
+
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+########################################################################################################################################################################################
+###########################################################SALES BY REGION SAMEAS FIRST FIGURE BUT NOT DIVIDED BY GENRE BUT BY REGION###################################################
+fig6 = plt.figure()
+fig6.suptitle('Most profitble Units by Genres and Region', fontsize=35)
+fig6.tight_layout()
+ax1 = fig6.add_subplot(5, 5, 1)
+ax2 = fig6.add_subplot(5, 5, 6)
+ax3 = fig6.add_subplot(5, 5, 11)
+ax4 = fig6.add_subplot(5, 5, 16)
+ax5 = fig6.add_subplot(5, 5, 21)
+ax6 = fig6.add_subplot(5, 5, 2)
+ax7 = fig6.add_subplot(5, 5, 7)
+ax8 = fig6.add_subplot(5, 5, 12)
+ax9 = fig6.add_subplot(5, 5, 17)
+ax10 = fig6.add_subplot(5, 5, 22)
+ax11 = fig6.add_subplot(5, 5, 3)
+ax12 = fig6.add_subplot(5, 5, 8)
+ax13 = fig6.add_subplot(5, 5, 13)
+ax14 = fig6.add_subplot(5, 5, 18)
+ax15 = fig6.add_subplot(5, 5, 23)
+ax16 = fig6.add_subplot(5, 5, 4)
+ax17 = fig6.add_subplot(5, 5, 9)
+ax18 = fig6.add_subplot(5, 5, 14)
+ax19 = fig6.add_subplot(5, 5, 19)
+ax20 = fig6.add_subplot(5, 5, 24)
+ax21 = fig6.add_subplot(5, 5, 5)
+ax22 = fig6.add_subplot(5, 5, 10)
+ax23 = fig6.add_subplot(5, 5, 15)
+ax24 = fig6.add_subplot(5, 5, 20)
+ax25 = fig6.add_subplot(5, 5, 25)
+
+years_df = df[['Genre', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+years_df = years_df.set_index('Year').sort_index(ascending=True)
+year_group1 = list(range(1980, 1990))
+year_group2 = list(range(1990, 2000))
+year_group3 = list(range(2000, 2006))
+year_group4 = list(range(2005, 2009))
+year_group5 = [2008]
+years_list = [year_group1, year_group2, year_group3, year_group4, year_group5]
+c = 0
+a = 0
+b = 6
+
+for year_group in years_list:
+    years_df = years_df.loc[year_group, :].reset_index().drop('Year', axis=1)
+
+    genre2_df = pd.DataFrame(years_df[['Genre', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+                             .groupby('Genre')
+                             .sum()) \
+        .sort_values(by='Global_Sales', axis=0, ascending=False) \
+        .reset_index()
+    genre2_df
+
+    genre2_df = pd.DataFrame(years_df[['Genre', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']])
+    genre2_df['Counts'] = genre2_df.groupby(['Genre'])['Genre'].transform(
+        len)  # len counts NANs, you can use 'count' if you want to ignore NANs
+    dict2 = genre2_df[['Genre', 'Counts']].set_index('Genre').to_dict()
+    genre_counts_df = pd.DataFrame(dict2).sort_values(by='Counts', ascending=False)
+    genre_counts_df.reset_index(inplace=True)
+    genre_counts_df.rename(columns={'index': 'Genre'}, inplace=True)
+    genre_counts_df
+
+    genre_counts_df.reset_index()
+    bins_edges = np.arange(len(list(df['Genre'].unique()))) - 0.5
+
+    genre3_df = genre2_df[['Genre', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+    genre3_df = genre3_df.groupby('Genre').sum()
+    dict3 = genre3_df.to_dict()
+    genre_globalsales_df = pd.DataFrame(dict3).sort_values(by='Global_Sales', ascending=False)
+    genre4_df = genre_counts_df.set_index('Genre').join(genre_globalsales_df).reset_index()
+
+    genre4_df['Global_Sales_Ratio'] = round((genre4_df['Global_Sales'] / genre4_df['Counts']) * 20, 2)
+    genre4_df['NA_Sales_Ratio'] = round((genre4_df['NA_Sales'] / genre4_df['Counts']) * 10, 2)
+    genre4_df['EU_Sales_Ratio'] = round((genre4_df['EU_Sales'] / genre4_df['Counts']) * 10, 2)
+    genre4_df['JP_Sales_Ratio'] = round((genre4_df['JP_Sales'] / genre4_df['Counts']) * 10, 2)
+    genre4_df['Other_Sales_Ratio'] = round((genre4_df['Other_Sales'] / genre4_df['Counts']) * 10, 2)
+    genre4_df.sort_values('Global_Sales_Ratio', ascending=False, inplace=True)
+
+    genre5_df = genre4_df.drop(['Counts', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales'], axis=1)
+    genre5_df = genre5_df.set_index('Genre')  # .transpose()
+
+    import matplotlib as mpl
+
+    mpl.rcParams['font.size'] = 15.0
+
+    ax_list = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12, ax13, ax14, ax15, ax16, ax17, ax18, ax19,
+               ax20, ax21, ax22, ax23, ax24, ax25]
+    ax_list = ax_list[a:b]
+    a = a + 5
+    b = b + 5
+    title_list = ['North America', 'Europe', 'Japan', 'Rest of World', 'All Regions']
+    regions_list = genre5_df[['NA_Sales_Ratio', 'EU_Sales_Ratio', 'JP_Sales_Ratio', 'Other_Sales_Ratio',
+                              'Global_Sales_Ratio']].columns[0:5]
+    # for the loop to work, resetting years_df
+    years_df = df[['Genre', 'Year', 'Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]
+    years_df = years_df.set_index('Year').sort_index(ascending=True)
+
+    years_list_text = [('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')'),
+                       ('(' + str(years_list[c][0]) + '-' + str(years_list[c][-1]) + ')')]
+    c = c + 1
+
+    for ax, region, title, txt in zip(ax_list, regions_list, title_list, years_list_text):
+        explode_list = [0] * len(genre5_df.index)
+        explode_list[0:3] = [0.1, 0.1, 0.1]
+        genre5_df.sort_values(by=region, ascending=False, inplace=True)
+        genres_list = list(genre5_df.index)
+        piecolours_list = list(tuple(genre5_df.reset_index()['Genre'].map(pallette_dict, na_action=None)))
+        cleaned_piecolours_list = [x for x in piecolours_list if str(x) != 'nan']
+        genre5_df.loc[genres_list, region].plot(kind='pie',
+                                                figsize=(50, 50),
+                                                radius=1.8,
+                                                autopct=lambda pct: ('%.2f' % pct) if pct > 5 else '',
+                                                pctdistance=1.2,
+                                                labeldistance=0.5,
+                                                startangle=90,
+                                                rotatelabels=True,
+                                                shadow=True,
+                                                labels=genre5_df.reset_index()['Genre'],
+                                                colors=cleaned_piecolours_list,
+                                                explode=explode_list,
+                                                ax=ax
+                                                )
+        ax.set_title(title + txt, loc='center', y=1.6, fontdict={'fontsize': 30,
+                                                           'fontweight': 20,
+                                                           'verticalalignment': 'top',
+                                                           'horizontalalignment': 'center'}
+                     )
+        ax.set(xlabel='', ylabel='')
+
+fig6.show()
+
+#######################################################################################################################################################################################
+#######################################################################################################################################################################################
+#######################################################################################################################################################################################
+########################################################################PUBLISHERS#####################################################################################################
+#####################################################################################PUBLISHERS########################################################################################
+###################################################################################PUBLISHERS##########################################################################################
+#####################################################################################PUBLISHERS########################################################################################
+#######################################################################################################################################################################################
+#################################################################Platform Histogram
+fig7 = plt.figure(figsize = (40,20)) # sizes the histogram
+fig7.tight_layout()
+
+ax1 = fig7.add_subplot(221)
+ax2 = fig7.add_subplot(222)
+ax3 = fig7.add_subplot(223)
+ax4 = fig7.add_subplot(224)
+
+top20_Publishers_df = df[['Publisher','NA_Sales','EU_Sales','JP_Sales','Other_Sales','Global_Sales','Year']].groupby('Publisher').sum().sort_values(by='Global_Sales',ascending=False).reset_index().loc[0:19]
+publishers_hist_df = df[['Publisher','Year','Global_Sales']]
+publishers_hist_df['Counts'] = publishers_hist_df.groupby(['Publisher'])['Publisher'].transform('count') #len counts NANs, you can use 'count' if you want to ignore NANs
+
+publishers_hist_df = publishers_hist_df[df['Publisher'].isin(top20_Publishers_df['Publisher'].to_list())]
+#############This dictionary trick speeds up the code, I could have sorted publishers_hist_df by counts and use it in the chart, but I created a sorted copy publisher_counts_df, it's faster, trust me ;)
+dict2 = publishers_hist_df[['Publisher','Counts']].set_index('Publisher').to_dict()
+publisher_counts_df = pd.DataFrame(dict2).sort_values(by='Counts',ascending=False)
+publisher_counts_df.reset_index(inplace=True)
+publisher_counts_df.rename(columns={'index':'Publisher'},inplace=True) #len counts NANs, you can use 'count' if you want to ignore NANs
+
+Publishers = list(top20_Publishers_df['Publisher'].unique())
+bins_edges = np.arange(len(list(top20_Publishers_df['Publisher'].unique())))-0.5
+
+ax1.bar(publisher_counts_df['Publisher'],publisher_counts_df['Counts']) #use this setting when using categorical data for histograms
+ax1.set_title('Top-20 Publishers Histogram',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax1.set_xticklabels([str(x) for x in Publishers],rotation=90)
+ax1.set(xlabel='Publishers',ylabel='')
+##################################################Top-20 Publishers Global Sales by Year Bar Chart
+rgb_colors = {}
+for name, hex in matplotlib.colors.cnames.items():
+    rgb_colors[name] = matplotlib.colors.to_rgb(hex)
+print(len(rgb_colors))
+
+yearsales_df = publishers_hist_df.groupby('Year').sum().sort_values(by='Year',axis=0,ascending=True)
+values = yearsales_df['Global_Sales'].to_list()
+
+yearsales_df = publishers_hist_df[['Year','Publisher','Global_Sales']].groupby(['Year','Publisher']).sum().sort_values(by='Year',axis=0,ascending=True)
+
+yearsales_df.reset_index(inplace=True)
+yearsales_df = yearsales_df.pivot(index='Year',columns='Publisher').fillna(0)
+yearsales_df.index = yearsales_df.index.astype(int)
+
+import random
+
+publishers_list = []
+for item in list(yearsales_df.columns):
+   publishers_list.append(item[1])
+
+
+colors_list = []
+for item in publishers_list:
+    color = "#%06x" % random.randint(0, 0xFFFFFF)
+    colors_list.append(color)
+#HEX_TO_RGBA
+rgb_colors_list = []
+for item in colors_list:
+    h = item.lstrip('#')
+    rgb_colors_list.append(tuple(int(h[i:i+2], 16)/255 for i in (0, 2, 4)))
+
+yearsales_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF.csv',skiprows=1,parse_dates=True)
+yearsales_df = temp_df.set_index('Publisher')
+
+yearsales_df.plot(kind='bar',stacked=True,colormap=ListedColormap(sns.color_palette(colors_list)),ax=ax2)
+
+for index, value in enumerate(values):
+    label = format(int(value), ',')
+    ax2.annotate(label,
+                xy=(index-0.25,value),
+                 color='k',
+                 size=15
+                 )
+ax2.legend(loc='best',prop={'size': 15})
+ax2.set_title('Top-20 Publishers Global Sales by Year',loc='center',fontdict={'fontsize': 30,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax2.set(xlabel='Years',ylabel='Sales')
+ax2.set_xticks(np.arange(len(years)))
+ax2.set_xticklabels([str(x) for x in years],rotation=90)
+
+##################################################H-Bar Chart Global Sales by Top-20 Publishers
+colors_dict = dict(zip(publishers_list,colors_list))
+
+
+new_publishers_hist_df = df[['Publisher','Global_Sales']].groupby(['Publisher']).sum().sort_values(by='Global_Sales',axis=0,ascending=False).reset_index()
+new_publishers_hist_df = new_publishers_hist_df.loc[0:19]
+
+pal = sns.color_palette("Paired", len(list(new_publishers_hist_df['Publisher'].unique())))
+pal = pal.as_hex()
+
+genres = list(yearsales_df.columns)
+#totalsales_df = new_publishers_hist_df[['Genre','Global_Sales']]
+new_publishers_hist_df.set_index('Publisher',inplace=True)
+new_publishers_hist_df.sort_values(by='Global_Sales',ascending=True,inplace=True)
+pallette_dict = dict(zip(genres, pal))
+
+plt.figure(figsize=(20,10))
+#totalsales_df.sort_values(by='Global_Sales',axis=0,ascending=True,inplace=True)
+
+
+new_publishers_hist_df.plot(kind='barh', ax=ax3, color=[tuple(new_publishers_hist_df.reset_index()['Publisher'].map(colors_dict))])
+values = new_publishers_hist_df['Global_Sales'].to_list()
+for index, value in enumerate(values):  # annotate value labels to each country
+    label = format(int(value), ',')
+    ax3.annotate(label,
+                xy=(value, index-0.12),
+                 color='k'
+                 )
+ax3.set_title('Global Sales by Top-20 Publishers(1980-2008)',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax3.set(xlabel='Sales', ylabel='Genres')
+ax3.legend('')
+
+#############################################Top 10 Publishers Global Sales by Year Line Chart
+
+publishers_df = pd.DataFrame(df[['Publisher','Global_Sales','NA_Sales','EU_Sales','JP_Sales','Other_Sales']]
+                        .groupby('Publisher')
+                        .sum())\
+    .sort_values(by='Global_Sales',axis=0,ascending=False)\
+    .reset_index()
+
+top10_publishers_df = pd.DataFrame(df[['Year', 'Publisher', 'Global_Sales']]
+                                 .groupby(['Year','Publisher']).sum())\
+    .sort_values(by='Year',ascending=True).reset_index()
+
+top10_publishers_df.set_index('Year', inplace=True)
+
+top10_publishers_df = top10_publishers_df[top10_publishers_df['Publisher']
+    .isin(publishers_df.loc[0:9,'Publisher'].tolist())].reset_index()
+
+top10_publishers_df = top10_publishers_df.pivot(index='Year', columns='Publisher')
+
+top10platforms_colors_dict = { your_key: colors_dict[your_key] for your_key in publishers_df.loc[0:9,'Publisher'] }
+publishers_df.loc[0:9, 'Publisher'].sort_values()
+
+top10_publishers_df.to_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF3.csv')
+temp_df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\TemporaryDF3.csv',skiprows=1,parse_dates=True)
+temp_df = temp_df.set_index('Publisher').fillna(0).drop('Year',axis=0)
+
+temp_df.plot(kind='line',figsize=(45,22.5),
+             color=list(tuple(publishers_df.loc[0:9, 'Publisher'].sort_values().map(top10platforms_colors_dict))),
+             linewidth=5,
+             ax=ax4)
+
+ax4.set_title('Top 10-Platforms Global Sales by Year',loc='center',fontdict={'fontsize': 25,
+ 'fontweight' : 10,
+ 'verticalalignment': 'top',
+ 'horizontalalignment': 'center'})
+ax4.set(xlabel='Years',ylabel='Platforms')
+
+ax4.set_xticks(np.arange(len(years)))
+ax4.set_xticklabels([str(x) for x in years],rotation=90)
+
+fig7.show()
