@@ -5,7 +5,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-df = pd.read_csv(r'C:\Users\Lorenzo\Documents\Lorenzo\STUDY\Jupyter\IBM - Python Data Science Professional Certificate\Datasets\VideoGameSales.csv',parse_dates=True)
+url = "https://srv-store2.gofile.io/download/GPGKFR/VideoGameSales.csv"
+df = pd.read_csv(url,parse_dates=True)
 headers = list(df.columns.values)
 years = list(range(2009,2021))
 df = (df[~df.Year.isin(years)].dropna(axis=0))
