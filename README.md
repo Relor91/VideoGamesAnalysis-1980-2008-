@@ -22,6 +22,6 @@ The crash began destabilizing the industry since 1982 and worsened in 1983 due t
 <br> 1)Too <strong>many</strong> small calibre <strong>consoles</strong> on the market.</br>
 <br> 2)The <strong>lack of publishing controls</strong> caused by the complete lack of credits to the developers which began writing games under
  their own names.</br>
-<br> <div style="text-align: right">3)Atari's <strong>E.T.</strong> which saw millions of copies being refunded in Christmas 1982 due to the game's poor design.</br>
-<br> 4)Atari's console-version of <strong>Pac-Man</strong> which resembled nothing like the Arcade experience.</br></div>
+<br> 3)Atari's <strong>E.T.</strong> which saw millions of copies being refunded in Christmas 1982 due to the game's poor design.</br>
+<br> 4)Atari's console-version of <strong>Pac-Man</strong> which resembled nothing like the Arcade experience.</br>
 
