@@ -25,7 +25,6 @@ The crash began destabilizing the industry since 1982 and worsened in 1983 due t
 <p> 3)Atari's <strong>E.T.</strong> which saw millions of copies being refunded in Christmas 1982 due to the game's poor design.</p>
 <p> 4)Atari's console-version of <strong>Pac-Man</strong> which resembled nothing like the Arcade experience.</p>
 
-
 <p><p><p>
 Videogames market was very unstable in 1982, and videogame Titan Atari registered a loss of <strong>900 Millions</strong> with E.T. & Pac-Man flops alone.
 A year in which home consoles games resembled nothing like the Arcade experience, a small games company in Japan was going to revive the videogames market: <strong>Nintendo</strong>.
