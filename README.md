@@ -1,4 +1,4 @@
-# Video Games Sales Analysis (1980-2008)
+# WORK IN PROGRESS -- Video Games Sales Analysis (1980-2008)
 Prepare to embark for a ride that will take us far back to the 80s, the golden age of Video Games, an age shaped by events which will influence and lay the foundations for the modern Video Games era.
 
 # A bit of History...
