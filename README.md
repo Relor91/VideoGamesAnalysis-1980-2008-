@@ -18,7 +18,7 @@ This is just the beginning for the newly emerged Videogames Industry which will 
  
  <p>By the end of the 70s and the beginning of the 80s the market was flooded with consoles, but one american company was the lead: <strong>Atari</strong>.
 Atari 2600 home console was released in 1977 and was kicking it until the <strong>Videogames Crash of 1983</strong>.
-The crash began destabilizing the industry since 1982 and worsened in 1983 due to a variety of factors: </br> 
+The crash began destabilizing the industry since 1982 and worsened in 1983 due to a variety of factors:
 <br> 1)Too <strong>many</strong> small calibre <strong>consoles</strong> on the market</br>
 <br> 2)The <strong>lack of publishing controls</strong> caused by the complete lack of credits to the developers which began writing games under
  their own names</br>
