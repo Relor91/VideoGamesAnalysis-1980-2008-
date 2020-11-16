@@ -13,7 +13,8 @@ Half a decade later and we are in 1976, the year that will change home consoles 
 This is just the beginning for the newly emerged Videogames Industry which will fill the malls with videogame cabinets, and houses with consoles.
   <br>
  # Consoles, consoles & consoles!
- <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Consoles%20Global%20Sales%20by%20Year.jpg" alt="drawing" height = "650" width="900" align="left"/><br>
+ <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Consoles%20Global%20Sales%20by%20Year.jpg" alt="drawing" height = "650" width="900" align="left"/>
+ <br>
   By the end of the 70s and the beginning of the 80s the market was flooded with consoles, but one american company was the lead: <strong>Atari</strong>.
 Atari 2600 home console was released in 1977 and was kicking it until the <strong>Videogames Crash of 1983</strong>.
 The crash began destabilizing the industry since 1982 and worsened in 1983 due to a variety of factors: 
