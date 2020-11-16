@@ -20,8 +20,8 @@ This is just the beginning for the newly emerged Videogames Industry which will 
 Atari 2600 home console was released in 1977 and was kicking it until the <strong>Videogames Crash of 1983</strong>.
 The crash began destabilizing the industry since 1982 and worsened in 1983 due to a variety of factors:
 <p align=center><p> 1)Too <strong>many</strong> small calibre <strong>consoles</strong> on the market.
- 2)The <strong>lack of publishing controls</strong> caused by the complete lack of credits to the developers which began writing games under
+<p> 2)The <strong>lack of publishing controls</strong> caused by the complete lack of credits to the developers which began writing games under
  their own names.
- 3)Atari's <strong>E.T.</strong> which saw millions of copies being refunded in Christmas 1982 due to the game's poor design.</p>
- 4)Atari's console-version of <strong>Pac-Man</strong> which resembled nothing like the Arcade experience.</p>
+<p> 3)Atari's <strong>E.T.</strong> which saw millions of copies being refunded in Christmas 1982 due to the game's poor design.</p>
+<p> 4)Atari's console-version of <strong>Pac-Man</strong> which resembled nothing like the Arcade experience.</p>
 
