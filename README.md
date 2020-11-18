@@ -8,7 +8,7 @@ Along with the introduction of the cathode-ray tube screens, videogames will rep
 It's the 70s now and Videogames have just taken to the malls with the first arcade videogame released in 1971 called 'Computer Space',
  followed in 1972 by the first home videogame console 'Magnavox Odyssey', a brown white and black rectangular box with two wired controllers with knobs, probably not the controller you are thinking right now but a more arcaic version.
 Half a decade later and we are in 1976, the year that will change home consoles forever with the invention of interchangeable games cartridges called ROMs,
- while just two years later the videogame 'Space Invaders' will literally invade Arcades and will prove to be the highest grossing videogame.
+ while just two years later the videogame 'Space Invaders' will literally invade Arcades and will prove to be the highest grossing videogame at the time.
 This is just the beginning for the newly emerged Videogames Industry which will fill the malls with videogame cabinets, and houses with consoles.
  
  # Consoles, consoles & consoles!
