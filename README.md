@@ -13,7 +13,7 @@ This is just the beginning for the newly emerged Videogames Industry which will 
  
  # Consoles, consoles & consoles!
  <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Consoles%20Global%20Sales%20by%20Year.jpg" alt="drawing" height = "650" width="950" align="centre"/>
-<img src="https://relor91.github.io/Lorenzo_Portfolio/images/Atari2600andNES.jpg" alt="drawing" height = "450" width="580" align="left"/>
+<img src="https://relor91.github.io/Lorenzo_Portfolio/images/Atari2600andNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
 
  By the end of the 70s and the beginning of the 80s the market was flooded with consoles, but one american company was the lead: <strong>Atari</strong>.
 Atari 2600 home console was released in 1977 and was kicking it until the <strong>Videogames Crash of 1983</strong>.
