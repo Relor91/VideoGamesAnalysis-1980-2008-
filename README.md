@@ -1,5 +1,5 @@
 # WORK IN PROGRESS -- Video Games Sales Analysis (1980-2008)
-Prepare to embark for a ride that will take us far back to the 80s, the golden age of Video Games, an age shaped by events which will influence and lay the foundations for the modern Video Games era.
+Prepare to embark for a ride that will take us far back to the 80s, the golden age of Video Games, an age shaped by events which will influence and lay the foundations for the modern Videogames era.
 
 # A bit of History...
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Arcades.jpg" alt="drawing" height = "350" width="450" align="left"/>It all began in 1947 when computer scientists decided to make the first step into human-computer interactions which brought them to make
