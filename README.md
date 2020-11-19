@@ -30,7 +30,7 @@ The crash began destabilizing the industry since 1982 and worsened in 1983 due t
 Videogames market was very unstable in 1982, and videogame Titan Atari registered a loss of <strong>900 Millions</strong> with E.T. & Pac-Man flops alone.
 A year in which home consoles games resembled nothing like the Arcade experience, a small toys company in Japan was going to revive the videogames market: <strong>Nintendo</strong>. With improved graphics and performance, Nintendo's Entertainment System (<strong>NES</strong>) will dominate the home-console market, giving the company the opportunity to expand it's horizons for years to come.
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/NintendoGB&SNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
-After nearly 7 years, 1989 sees the launch of the Gameboy (<strong>GB</strong>), the first portable videogaming device, soon followed in 1990 by the release of a new Nintendo home-console called SuperNintendo (<strong>SNES</strong>), introducing for the first time 3-D graphics.
-<p>On the 22nd of April 1993 the <strong>World Wide Web</strong> makes it's first appearance, but also the game that will boost PC's presence into the videogames market: <strong>DOOM</strong>.
+After nearly 7 years, <strong>1989</strong> sees the launch of the Gameboy (<strong>GB</strong>), the first portable videogaming device, soon followed in <strong>1990</strong> by the release of a new Nintendo home-console called SuperNintendo (<strong>SNES</strong>), introducing for the first time 3-D graphics.
+<p>On the 22nd of April <strong>1993</strong> the <strong>World Wide Web</strong> makes it's first appearance, but also the game that will boost PC's presence into the videogames market: <strong>DOOM</strong>.
 
 
