@@ -34,6 +34,7 @@ A year in which home consoles games resembled nothing like the Arcade experience
 After nearly 7 years, <strong>1989</strong> sees the launch of the Gameboy (<strong>GB</strong>), the first portable videogaming device, soon followed in <strong>1990</strong> by the release of a new Nintendo home-console called SuperNintendo (<strong>SNES</strong>), introducing for the first time 3-D graphics.
 <p>On the 22nd of April <strong>1993</strong> the <strong>World Wide Web</strong> makes it's first appearance, but also the game that will boost PC's presence into the videogames market: <strong>DOOM</strong>.
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/PS.jpg" alt="drawing" height = "650" width="950" align="left"/>
+ <br></br><br></br><br></br>
 In <strong>1996</strong> a new player enters the arena, a player that will shape the future of consoles forever: <strong>SONY</strong>. 
  <br>With <strong>Playstation</strong>, SONY will surpass Nintendo's console <strong>Nintendo64</strong> and will set a new benchmark for the gaming industry. Sony will not be the only player in this new era, <strong>Microsoft</strong> with the <strong>XBox</strong> serie and Nintendo with GameBody Advance (<strong>GBA</strong>), Games Cube (<strong>GC</strong>) the <strong>DS</strong> and <strong>Wii</strong>. New generations of console seem to spawn every 5 years, but one thing is clear, despite SONY and Microsoft make big sales with only one console per generation, Nintendo's diversified market make for a bigger total.
 
