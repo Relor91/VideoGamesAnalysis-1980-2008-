@@ -2,7 +2,7 @@
 Prepare to embark for a ride that will take us far back to the 80s, the golden age of Video Games, an age shaped by events which will influence and lay the foundations for the modern Videogames era.
 
 # A bit of History...
-<img src="https://relor91.github.io/Lorenzo_Portfolio/images/Arcades.jpg" alt="drawing" height = "600" width="500" align="left"/>It all began in 1947 when computer scientists decided to make the first step into human-computer interactions which brought them to make
+<img src="https://relor91.github.io/Lorenzo_Portfolio/images/Arcades.jpg" alt="drawing" height = "570" width="500" align="left"/>It all began in 1947 when computer scientists decided to make the first step into human-computer interactions which brought them to make
 the very first interactive game with an electronic display. Amongst those early games there was OXO, a videogame which simulated the game of noughts and crosses.
 Along with the introduction of the cathode-ray tube screens, videogames will represent the first playful interaction between man and machine.
 It's the 70s now and Videogames have just taken to the malls with the first arcade videogame released in 1971 called 'Computer Space',
@@ -11,7 +11,7 @@ Half a decade later and we are in 1976, the year that will change home consoles 
  while just two years later the videogame 'Space Invaders' will literally invade Arcades and will prove to be the highest grossing videogame at the time.
 This is just the beginning for the newly emerged Videogames Industry which will fill the malls with videogame cabinets, and houses with consoles.
  
-<br>
+
 # Consoles, consoles & consoles!
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Consoles%20Global%20Sales%20by%20Year.jpg" alt="drawing" height = "650" width="950" align="centre"/>
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Atari2600andNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
