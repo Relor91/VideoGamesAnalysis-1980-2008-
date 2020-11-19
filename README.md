@@ -29,3 +29,6 @@ The crash began destabilizing the industry since 1982 and worsened in 1983 due t
 <br>
 Videogames market was very unstable in 1982, and videogame Titan Atari registered a loss of <strong>900 Millions</strong> with E.T. & Pac-Man flops alone.
 A year in which home consoles games resembled nothing like the Arcade experience, a small toys company in Japan was going to revive the videogames market: <strong>Nintendo</strong>.
+<img src="https://relor91.github.io/Lorenzo_Portfolio/images/NintendoGB&SNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
+
+
