@@ -12,7 +12,7 @@ Half a decade later and we are in 1976, the year that will change home consoles 
 This is just the beginning for the newly emerged Videogames Industry which will fill the malls with videogame cabinets, and houses with consoles.
  
 
-<p></p>
+<br></br>
 # Consoles, consoles & consoles!
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Consoles%20Global%20Sales%20by%20Year.jpg" alt="drawing" height = "650" width="950" align="centre"/>
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/Atari2600andNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
