@@ -32,6 +32,6 @@ A year in which home consoles games resembled nothing like the Arcade experience
 <img src="https://relor91.github.io/Lorenzo_Portfolio/images/NintendoGB&SNES.jpg" alt="drawing" height = "460" width="580" align="left"/>
 After nearly 7 years, <strong>1989</strong> sees the launch of the Gameboy (<strong>GB</strong>), the first portable videogaming device, soon followed in <strong>1990</strong> by the release of a new Nintendo home-console called SuperNintendo (<strong>SNES</strong>), introducing for the first time 3-D graphics.
 <p>On the 22nd of April <strong>1993</strong> the <strong>World Wide Web</strong> makes it's first appearance, but also the game that will boost PC's presence into the videogames market: <strong>DOOM</strong>.
-<img src="https://relor91.github.io/Lorenzo_Portfolio/images/PS.jpg" alt="drawing" height = "650" width="950" align="left"/>
+<img src="https://relor91.github.io/Lorenzo_Portfolio/images/PS.jpg" alt="drawing" align="left"/>
 
 
